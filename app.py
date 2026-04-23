@@ -4,8 +4,8 @@ import numpy as np
 import io
 import plotly.express as px
 
-st.set_page_config(page_title='InsightBase', layout='wide')
-st.title('InsightBase')
+st.set_page_config(page_title='InsightsBase', layout='wide')
+st.title('InsightsBase')
 st.caption('Upload → Clean → Analyze → Export')
 
 # ---------- Helpers ----------
