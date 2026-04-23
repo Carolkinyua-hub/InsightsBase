@@ -77,12 +77,27 @@ if file:
 
     # Sidebar
     st.sidebar.header('Cleaning Controls')
+    missing_strategy = st.sidebar.selectbox('Missing Value Treatment', ['Leave As Is','Drop Rows With Missing','Fill Numeric Mean','Fill Numeric Median','Fill Text Mode'])
     drop_cols = st.sidebar.multiselect('Drop Columns', df.columns.tolist())
     trim_ws = st.sidebar.checkbox('Trim Whitespace', value=True)
     remove_dupes = st.sidebar.checkbox('Remove Duplicates', value=True)
     blanks_to_na = st.sidebar.checkbox('Convert Blanks to Null', value=True)
 
     clean_df = clean_dataframe(df, drop_cols, trim_ws, remove_dupes, blanks_to_na)
+    if missing_strategy == 'Drop Rows With Missing':
+        clean_df = clean_df.dropna()
+    elif missing_strategy == 'Fill Numeric Mean':
+        for c in clean_df.select_dtypes(include=np.number).columns:
+            clean_df[c] = clean_df[c].fillna(clean_df[c].mean())
+    elif missing_strategy == 'Fill Numeric Median':
+        for c in clean_df.select_dtypes(include=np.number).columns:
+            clean_df[c] = clean_df[c].fillna(clean_df[c].median())
+    elif missing_strategy == 'Fill Text Mode':
+        for c in clean_df.columns:
+            if clean_df[c].dtype == 'object':
+                m = clean_df[c].mode(dropna=True)
+                if len(m):
+                    clean_df[c] = clean_df[c].fillna(m.iloc[0])
 
     # Preview
     st.subheader('Dataset Overview')
@@ -122,6 +137,7 @@ if file:
 
     # Pivot
     st.subheader('Pivot Table Builder')
+    st.caption('Build and preview pivot summaries instantly.')
     rows = st.selectbox('Rows', ['None'] + clean_df.columns.tolist())
     cols = st.selectbox('Columns', ['None'] + clean_df.columns.tolist())
     vals = st.selectbox('Values', ['None'] + clean_df.columns.tolist())
@@ -136,6 +152,7 @@ if file:
             aggfunc=agg,
             fill_value=0
         )
+        st.write('Pivot Preview')
         st.dataframe(pivot, use_container_width=True)
     except:
         pivot = pd.DataFrame()
@@ -143,7 +160,7 @@ if file:
     # Charts
     st.subheader('Visualisations')
     chart_col = st.selectbox('Chart Column', clean_df.columns.tolist())
-    chart_type = st.selectbox('Chart Type', ['Bar','Histogram','Boxplot','Line'])
+    chart_type = st.selectbox('Chart Type', ['Bar','Histogram','Boxplot','Line','Pie','Frequency Table','CLT Simulation'])
 
     try:
         if chart_type == 'Bar':
@@ -153,11 +170,28 @@ if file:
             fig = px.histogram(clean_df, x=chart_col)
         elif chart_type == 'Boxplot':
             fig = px.box(clean_df, y=chart_col)
+        elif chart_type == 'Pie':
+            vc = clean_df[chart_col].astype(str).value_counts().head(10)
+            fig = px.pie(values=vc.values, names=vc.index)
+        elif chart_type == 'Frequency Table':
+            vc = clean_df[chart_col].astype(str).value_counts().reset_index()
+            vc.columns = [chart_col, 'count']
+            st.dataframe(vc, use_container_width=True)
+            fig = px.bar(vc, x=chart_col, y='count')
+        elif chart_type == 'CLT Simulation':
+            vals = pd.to_numeric(clean_df[chart_col], errors='coerce').dropna()
+            if len(vals) > 5:
+                means = [vals.sample(min(30, len(vals)), replace=True).mean() for _ in range(300)]
+                fig = px.histogram(x=means, nbins=30, labels={'x':'Sample Means'})
+            else:
+                st.info('Need numeric data for CLT simulation.')
+                fig = None
         else:
             num = clean_df.select_dtypes(include=np.number).columns.tolist()
             ycol = num[0] if num else None
             fig = px.line(clean_df.reset_index(), x=clean_df.index, y=ycol)
-        st.plotly_chart(fig, use_container_width=True)
+        if fig is not None:
+            st.plotly_chart(fig, use_container_width=True)
     except:
         st.info('Chart unavailable for selected column.')
 
