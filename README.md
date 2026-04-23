@@ -1,8 +1,8 @@
 # InsightsBase
-**InsightBase** is a self-service descriptive statistics platform that helps businesses upload raw datasets, clean data, generate summaries, build pivot tables, create charts, and export professional reports in minutes. It simplifies analytics for survey, operational, and Survey CTO datasets without requiring coding or advanced BI tools.
-# InsightBase
+**InsightsBase** is a self-service descriptive statistics platform that helps businesses upload raw datasets, clean data, generate summaries, build pivot tables, create charts, and export professional reports in minutes. It simplifies analytics for survey, operational, and Survey CTO datasets without requiring coding or advanced BI tools.
+# InsightsBase
 
-**InsightBase** is a self-service descriptive statistics and data-preprocessing platform built with :contentReference[oaicite:0]{index=0} :contentReference[oaicite:1]{index=1}. It helps users upload datasets, clean data, generate descriptive statistics, build pivot tables, visualize trends, and export professional Excel reports — all without coding.
+**InsightsBase** is a self-service descriptive statistics and data-preprocessing platform built with :contentReference[oaicite:0]{index=0} :contentReference[oaicite:1]{index=1}. It helps users upload datasets, clean data, generate descriptive statistics, build pivot tables, visualize trends, and export professional Excel reports — all without coding.
 
 🔗 Live App: https://insights-base.streamlit.app/
 
@@ -10,7 +10,7 @@
 
 # Overview
 
-InsightBase is designed for:
+InsightsBase is designed for:
 
 - Business analysts  
 - Survey research teams  
@@ -126,9 +126,9 @@ Download a single Excel workbook containing:
 
 ---
 
-# Why InsightBase?
+# Why InsightsBase?
 
-InsightBase bridges the gap between spreadsheets and enterprise BI tools by giving users a fast, intuitive analytics workspace.
+InsightsBase bridges the gap between spreadsheets and enterprise BI tools by giving users a fast, intuitive analytics workspace.
 
 ### Benefits
 
